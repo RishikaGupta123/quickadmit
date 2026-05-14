@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Quick Admit Admin</title>
+
+    <style>
+
+        body{
+
+            font-family:Arial;
+            background:#eef4ff;
+            padding:30px;
+        }
+
+        h1{
+
+            text-align:center;
+            color:#2563eb;
+        }
+
+        .box{
+
+            background:white;
+            padding:20px;
+            border-radius:15px;
+            margin-bottom:25px;
+
+            box-shadow:
+            0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        input{
+
+            width:100%;
+            padding:12px;
+            margin-top:10px;
+            border-radius:10px;
+            border:1px solid #ccc;
+        }
+
+        button{
+
+            background:#2563eb;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:10px;
+            margin-top:15px;
+            cursor:pointer;
+        }
+
+        .hospital-card{
+
+            background:white;
+            padding:20px;
+            margin-top:15px;
+            border-radius:15px;
+        }
+
+        .delete-btn{
+
+            background:red;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>🏥 Quick Admit Admin Panel</h1>
+
+<!-- ADD HOSPITAL -->
+
+<div class="box">
+
+    <h2>Add Hospital</h2>
+
+    <input id="name" placeholder="Hospital Name">
+
+    <input id="category" placeholder="government/private">
+
+    <input id="city" placeholder="City">
+
+    <input id="rating" placeholder="Rating">
+
+    <input id="distance" placeholder="Distance">
+
+    <input id="ambulance" placeholder="Ambulance Available">
+
+    <input id="phone" placeholder="Phone Number">
+
+    <input id="doctors" placeholder="Doctors comma separated">
+
+    <input id="privateBeds" placeholder="Private Beds">
+
+    <input id="sharedBeds" placeholder="Shared Beds">
+
+    <input id="icuBeds" placeholder="ICU Beds">
+
+    <button onclick="addHospital()">
+        Add Hospital
+    </button>
+
+</div>
+
+<!-- HOSPITAL LIST -->
+
+<div class="box">
+
+    <h2>Hospitals</h2>
+
+    <div id="hospitalList"></div>
+
+</div>
+
+<!-- PATIENTS -->
+
+<div class="box">
+
+    <h2>Patients / Bookings</h2>
+
+    <div id="patients"></div>
+
+</div>
+
+<script>
+
+loadHospitals();
+
+loadPatients();
+
+/* ADD HOSPITAL */
+
+function addHospital(){
+
+    const hospital = {
+
+        name:
+        document.getElementById("name").value,
+
+        category:
+        document.getElementById("category").value,
+
+        city:
+        document.getElementById("city").value,
+
+        rating:
+        document.getElementById("rating").value,
+
+        distance:
+        document.getElementById("distance").value,
+
+        ambulance:
+        document.getElementById("ambulance").value,
+
+        phone:
+        document.getElementById("phone").value,
+
+        doctors:
+        document.getElementById("doctors")
+        .value
+        .split(","),
+
+        privateBeds:Number(
+            document.getElementById(
+                "privateBeds"
+            ).value
+        ),
+
+        sharedBeds:Number(
+            document.getElementById(
+                "sharedBeds"
+            ).value
+        ),
+
+        icuBeds:Number(
+            document.getElementById(
+                "icuBeds"
+            ).value
+        )
+    };
+
+    fetch("/api/admin/add-hospital",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(hospital)
+    })
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        alert(data.message);
+
+        loadHospitals();
+    });
+}
+
+/* LOAD HOSPITALS */
+
+function loadHospitals(){
+
+    fetch("/api/hospitals")
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        const container =
+            document.getElementById(
+                "hospitalList"
+            );
+
+        container.innerHTML = "";
+
+        data.forEach(h=>{
+
+            container.innerHTML +=
+
+            `
+            <div class="hospital-card">
+
+                <h3>${h.name}</h3>
+
+                <p>📍 ${h.city}</p>
+
+                <p>📞 ${h.phone}</p>
+
+                <p>🛏 Private:
+                ${h.privateBeds}</p>
+
+                <p>🛏 Shared:
+                ${h.sharedBeds}</p>
+
+                <p>🚨 ICU:
+                ${h.icuBeds}</p>
+
+                <button
+                class="delete-btn"
+                onclick="deleteHospital('${h.name}')">
+
+                    Delete
+
+                </button>
+
+            </div>
+            `;
+        });
+    });
+}
+
+/* DELETE HOSPITAL */
+
+function deleteHospital(name){
+
+    const confirmDelete =
+        confirm(
+            "Delete hospital?"
+        );
+
+    if(!confirmDelete) return;
+
+    fetch("/api/admin/delete-hospital",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            name:name
+        })
+    })
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        alert(data.message);
+
+        loadHospitals();
+    });
+}
+
+/* LOAD PATIENTS */
+
+function loadPatients(){
+
+    fetch("/api/admin/patients")
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        const container =
+            document.getElementById(
+                "patients"
+            );
+
+        container.innerHTML = "";
+
+        data.forEach(p=>{
+
+            container.innerHTML +=
+
+            `
+            <div class="hospital-card">
+
+                <h3>${p.patientName}</h3>
+
+                <p>🏥 ${p.hospitalName}</p>
+
+                <p>🛏 ${p.type}</p>
+
+                <p>📅 ${p.date}</p>
+
+                <p>🆔 ${p.receipt}</p>
+
+            </div>
+            `;
+        });
+    });
+}
+
+</script>
+
+</body>
+</html>

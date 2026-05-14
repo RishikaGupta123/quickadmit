@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Bookings</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div class="logo">
+        MediCare+
+    </div>
+
+    <div class="nav-right">
+
+        <a href="home.html">Home</a>
+
+    </div>
+
+</div>
+
+<h1 style="padding:30px; text-align:center;">
+    My Bookings
+</h1>
+
+<div id="bookingList" class="hospital-grid"></div>
+
+<script>
+
+fetch('/api/bookings')
+
+.then(res => res.json())
+
+.then(data => {
+
+    const container =
+        document.getElementById('bookingList');
+
+    data.forEach(b => {
+
+        const div =
+            document.createElement('div');
+
+        div.className = 'hospital-card';
+
+        div.innerHTML = `
+
+            <h2>${b.hospitalName}</h2>
+
+            <p><b>Patient:</b> ${b.patientName}</p>
+
+            <p><b>Age:</b> ${b.patientAge}</p>
+
+            <p><b>Bed:</b> ${b.type}</p>
+
+            <p><b>Booked By:</b> ${b.user}</p>
+
+            <p><b>Time:</b> ${b.time}</p>
+
+            <button onclick="cancelBooking(${b.id})">
+
+                Cancel Booking
+
+            </button>
+        `;
+
+        container.appendChild(div);
+    });
+});
+
+function cancelBooking(id){
+
+    fetch('/api/cancel',{
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify({id})
+
+    })
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        alert(data.message);
+
+        location.reload();
+    });
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Quick Admit</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        body{
+
+            font-family:Arial;
+            margin:0;
+            padding:0;
+            background:#eef4ff;
+        }
+
+        header{
+
+            background:#2563eb;
+            color:white;
+            padding:20px;
+            text-align:center;
+        }
+
+        .top-bar{
+
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            justify-content:center;
+            padding:20px;
+        }
+
+        input,
+        select{
+
+            padding:12px;
+            border-radius:10px;
+            border:1px solid #ccc;
+        }
+
+        button{
+
+            padding:12px 18px;
+            border:none;
+            border-radius:10px;
+            background:#2563eb;
+            color:white;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+        .dashboard{
+
+            display:flex;
+            gap:20px;
+            justify-content:center;
+            flex-wrap:wrap;
+            padding:20px;
+        }
+
+        .card{
+
+            background:white;
+            padding:20px;
+            border-radius:15px;
+            width:220px;
+            text-align:center;
+
+            box-shadow:
+            0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #map{
+
+            height:500px;
+            margin:20px;
+            border-radius:20px;
+            overflow:hidden;
+        }
+
+        #hospitalList{
+
+            display:grid;
+
+            grid-template-columns:
+            repeat(auto-fit,minmax(320px,1fr));
+
+            gap:20px;
+
+            padding:20px;
+        }
+
+        .hospital-card{
+
+            background:white;
+            border-radius:15px;
+            overflow:hidden;
+
+            box-shadow:
+            0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .hospital-image{
+
+            width:100%;
+            height:200px;
+            object-fit:cover;
+        }
+
+        .hospital-content{
+
+            padding:20px;
+        }
+
+        .bed-box{
+
+            background:#f3f7ff;
+            padding:15px;
+            border-radius:10px;
+            margin-top:10px;
+        }
+
+        .doctor-box{
+
+            margin-top:15px;
+        }
+
+        .status{
+
+            padding:6px 10px;
+            border-radius:8px;
+            color:white;
+            display:inline-block;
+            margin-top:5px;
+        }
+
+        .green{
+
+            background:green;
+        }
+
+        .yellow{
+
+            background:orange;
+        }
+
+        .red{
+
+            background:red;
+        }
+
+        #chatbot{
+
+            position:fixed;
+            right:20px;
+            bottom:20px;
+            background:white;
+            width:320px;
+            border-radius:15px;
+            padding:15px;
+
+            box-shadow:
+            0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        #chatInput{
+
+            width:100%;
+            margin-top:10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+    <h1>🏥 Quick Admit</h1>
+
+    <p>
+        Real-Time Hospital &
+        Emergency Management System
+    </p>
+
+</header>
+
+<!-- SEARCH -->
+
+<div class="top-bar">
+
+    <input
+    id="searchType"
+    placeholder="private/shared/icu">
+
+    <select id="hospitalCategory">
+
+        <option value="all">
+            All Hospitals
+        </option>
+
+        <option value="government">
+            Government
+        </option>
+
+        <option value="private">
+            Private
+        </option>
+
+    </select>
+
+    <input
+    id="citySearch"
+    placeholder="Enter City">
+
+    <button onclick="searchBed()">
+        🔍 Search
+    </button>
+
+    <button onclick="getLocation()">
+        📍 Use My Location
+    </button>
+
+    <button onclick="viewBookings()">
+        📖 My Bookings
+    </button>
+
+    <button onclick="showNotifications()">
+        🔔 Notifications
+    </button>
+
+    <button onclick="callAmbulance()">
+        🚑 Ambulance
+    </button>
+
+    <button onclick="emergencySOS()">
+        🆘 SOS
+    </button>
+
+    <button onclick="toggleDarkMode()">
+        🌙 Dark Mode
+    </button>
+
+    <button onclick="logout()">
+        🚪 Logout
+    </button>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div class="dashboard">
+
+    <div class="card">
+
+        <h2 id="totalHospitals">0</h2>
+
+        <p>Total Hospitals</p>
+
+    </div>
+
+    <div class="card">
+
+        <h2 id="totalBeds">0</h2>
+
+        <p>Total Beds</p>
+
+    </div>
+
+    <div class="card">
+
+        <h2 id="totalICU">0</h2>
+
+        <p>ICU Beds</p>
+
+    </div>
+
+</div>
+
+<!-- GOOGLE MAP -->
+
+<div id="map"></div>
+
+<!-- HOSPITALS -->
+
+<div id="hospitalList"></div>
+
+<!-- CHATBOT -->
+
+<div id="chatbot">
+
+    <h3>🤖 AI Health Assistant</h3>
+
+    <input
+    id="chatInput"
+    placeholder="Describe symptoms...">
+
+    <button onclick="sendChat()">
+        Send
+    </button>
+
+    <div id="chatReply"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+<!-- GOOGLE MAPS -->
+
+<script async defer
+
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSpuATepn4qArGCq3BPXU78JkSrPaDwog&callback=initMap">
+
+</script>
+
+</body>
+</html>

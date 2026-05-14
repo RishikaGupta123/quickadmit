@@ -1,0 +1,8 @@
+hdgfchd | City Hospital | icu
+bfg | City Hospital | private
+rishu | City Hospital | icu
+bf | City Hospital | shared
+bvds | City Hospital | private
+riahia | City Hospital | private
+null | City Hospital | private
+hgdesavdf | City Hospital | private
