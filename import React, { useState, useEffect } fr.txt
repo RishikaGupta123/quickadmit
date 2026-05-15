@@ -1,0 +1,1051 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "/components/ui/card";
+import { Button } from "/components/ui/button";
+import { Input } from "/components/ui/input";
+import { Label } from "/components/ui/label";
+
+const SafeVoyagerApp = () => {
+  const [currentView, setCurrentView] = useState('tourist');
+  const [touristScreen, setTouristScreen] = useState('welcome');
+  const [dashboardScreen, setDashboardScreen] = useState('login');
+  const [language, setLanguage] = useState('English');
+  const [sosSent, setSosSent] = useState(false);
+  const [arActive, setArActive] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      {/* View Toggle */}
+      <div className="flex justify-center pt-4">
+        <div className="bg-muted rounded-lg p-1 flex">
+          <Button
+            variant={currentView === 'tourist' ? 'default' : 'ghost'}
+            onClick={() => setCurrentView('tourist')}
+            className="rounded-lg"
+          >
+            Tourist App
+          </Button>
+          <Button
+            variant={currentView === 'authority' ? 'default' : 'ghost'}
+            onClick={() => setCurrentView('authority')}
+            className="rounded-lg"
+          >
+            Authority Dashboard
+          </Button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto p-4">
+        {currentView === 'tourist' ? (
+          <TouristApp 
+            screen={touristScreen} 
+            setScreen={setTouristScreen}
+            language={language}
+            setLanguage={setLanguage}
+            sosSent={sosSent}
+            setSosSent={setSosSent}
+            arActive={arActive}
+            setArActive={setArActive}
+          />
+        ) : (
+          <AuthorityDashboard 
+            screen={dashboardScreen} 
+            setScreen={setDashboardScreen}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Tourist Mobile App Component
+const TouristApp = ({ screen, setScreen, language, setLanguage, sosSent, setSosSent, arActive, setArActive }) => {
+  switch(screen) {
+    case 'welcome':
+      return <WelcomeScreen setScreen={setScreen} />;
+    case 'registration':
+      return <RegistrationScreen setScreen={setScreen} />;
+    case 'home':
+      return <HomeScreen setScreen={setScreen} language={language} setLanguage={setLanguage} sosSent={sosSent} setSosSent={setSosSent} />;
+    case 'safetyAlerts':
+      return <SafetyAlertsScreen setScreen={setScreen} />;
+    case 'geoFencing':
+      return <GeoFencingScreen setScreen={setScreen} />;
+    case 'incidentResponse':
+      return <IncidentResponseScreen setScreen={setScreen} sosSent={sosSent} setSosSent={setSosSent} />;
+    case 'digitalId':
+      return <DigitalIdScreen setScreen={setScreen} />;
+    case 'aiAssistant':
+      return <AIAssistantScreen setScreen={setScreen} language={language} setLanguage={setLanguage} />;
+    case 'iotIntegration':
+      return <IotIntegrationScreen setScreen={setScreen} />;
+    case 'arSafeRoute':
+      return <ArSafeRouteScreen setScreen={setScreen} arActive={arActive} setArActive={setArActive} />;
+    default:
+      return <WelcomeScreen setScreen={setScreen} />;
+  }
+};
+
+// Authority Dashboard Component
+const AuthorityDashboard = ({ screen, setScreen }) => {
+  switch(screen) {
+    case 'login':
+      return <AuthorityLoginScreen setScreen={setScreen} />;
+    case 'dashboard':
+      return <DashboardMapScreen setScreen={setScreen} />;
+    case 'incidentAlerts':
+      return <IncidentAlertPanelScreen setScreen={setScreen} />;
+    case 'responderAssignment':
+      return <ResponderAssignmentScreen setScreen={setScreen} />;
+    case 'incidentReport':
+      return <IncidentReportScreen setScreen={setScreen} />;
+    default:
+      return <AuthorityLoginScreen setScreen={setScreen} />;
+  }
+};
+
+// Tourist App Screens
+const WelcomeScreen = ({ setScreen }) => {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[80vh]">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-primary mb-2">Safe Voyager</h1>
+        <p className="text-lg text-muted-foreground">Your Guardian for every journey</p>
+      </div>
+      
+      <div className="text-center mb-10">
+        <h2 className="text-2xl font-semibold mb-2">Smart Tourist Safety</h2>
+        <p className="text-muted-foreground">Your AI-powered safety companion</p>
+      </div>
+      
+      <div className="w-full max-w-md space-y-4">
+        <Button className="w-full" size="lg" onClick={() => setScreen('registration')}>
+          Create Digital ID
+        </Button>
+        <Button variant="outline" className="w-full" size="lg">
+          Login
+        </Button>
+      </div>
+      
+      <div className="mt-12">
+        <img 
+          src="https://placeholder-image-service.onrender.com/image/300x200?prompt=Modern%20mobile%20app%20welcome%20screen%20with%20travel%20theme%20and%20security%20icons&id=welcome-screen" 
+          alt="Safe Voyager mobile app welcome interface with security icons and travel imagery" 
+          className="rounded-lg shadow-md"
+        />
+      </div>
+    </div>
+  );
+};
+
+const RegistrationScreen = ({ setScreen }) => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    age: '',
+    contact: '',
+    emergencyContact: ''
+  });
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  return (
+    <div className="max-w-md mx-auto">
+      <h2 className="text-2xl font-semibold mb-6 text-center">Create Your Digital ID</h2>
+      
+      {/* Progress Steps */}
+      <div className="flex justify-between mb-8">
+        {[1, 2, 3].map(step => (
+          <div key={step} className="flex flex-col items-center">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= step ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+              {step}
+            </div>
+            <span className="text-sm mt-1">Step {step}</span>
+          </div>
+        ))}
+      </div>
+      
+      {currentStep === 1 && (
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>Upload Government ID</CardTitle>
+            <CardDescription>Verify your identity with a valid government-issued ID</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center mb-4">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/100x100?prompt=ID%20upload%20icon%20with%20arrow%20pointing%20upward&id=upload-icon" 
+                alt="Upload icon for ID verification" 
+                className="mx-auto mb-4"
+              />
+              <p className="text-sm text-muted-foreground">Tap to upload your government ID</p>
+            </div>
+            <Button className="w-full" onClick={() => setCurrentStep(2)}>Continue</Button>
+          </CardContent>
+        </Card>
+      )}
+      
+      {currentStep === 2 && (
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>Live Face Verification</CardTitle>
+            <CardDescription>We need to verify that it's really you</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center mb-4">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/100x100?prompt=Facial%20recognition%20icon%20with%20outline%20of%20a%20face%20and%20scanning%20lines&id=face-verify" 
+                alt="Facial recognition scanning interface" 
+                className="mx-auto mb-4"
+              />
+              <p className="text-sm text-muted-foreground">Position your face in the frame</p>
+            </div>
+            <Button className="w-full" onClick={() => setCurrentStep(3)}>Verify My Identity</Button>
+          </CardContent>
+        </Card>
+      )}
+      
+      {currentStep === 3 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Personal Information</CardTitle>
+            <CardDescription>Complete your profile details</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="firstName">First Name</Label>
+                <Input id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
+              </div>
+              <div>
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} />
+              </div>
+              <div>
+                <Label htmlFor="age">Age</Label>
+                <Input id="age" name="age" type="number" value={formData.age} onChange={handleInputChange} />
+              </div>
+              <div>
+                <Label htmlFor="contact">Contact Number</Label>
+                <Input id="contact" name="contact" value={formData.contact} onChange={handleInputChange} />
+              </div>
+              <div>
+                <Label htmlFor="emergencyContact">Emergency Contact Number</Label>
+                <Input id="emergencyContact" name="emergencyContact" value={formData.emergencyContact} onChange={handleInputChange} />
+              </div>
+              
+              <div className="flex items-center space-x-2 mt-4">
+                <input type="checkbox" id="terms" className="rounded" />
+                <Label htmlFor="terms" className="text-sm">
+                  I agree to the terms and conditions
+                </Label>
+              </div>
+              
+              <Button className="w-full mt-4" onClick={() => setScreen('home')}>
+                Complete Registration
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      
+      <div className="mt-6 text-center">
+        <Button variant="ghost" onClick={() => setScreen('welcome')}>Back to Welcome</Button>
+      </div>
+    </div>
+  );
+};
+
+const HomeScreen = ({ setScreen, language, setLanguage, sosSent, setSosSent }) => {
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h2 className="text-2xl font-semibold">Hello, Sarah</h2>
+          <p className="text-muted-foreground">ID: 0x8a3f...c42d</p>
+        </div>
+        <Button variant="outline" onClick={() => setScreen('digitalId')}>View Profile</Button>
+      </div>
+      
+      {/* Itinerary Overview */}
+      <Card className="mb-6">
+        <CardHeader className="pb-3">
+          <CardTitle>Your Itinerary</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="font-medium">Eiffel Tower Visit</p>
+                <p className="text-sm text-muted-foreground">Today, 2:00 PM</p>
+              </div>
+              <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Confirmed</div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="font-medium">Louvre Museum</p>
+                <p className="text-sm text-muted-foreground">Tomorrow, 10:00 AM</p>
+              </div>
+              <div className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Upcoming</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Safety Status */}
+      <Card className="mb-6">
+        <CardHeader className="pb-3">
+          <CardTitle>Safety Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-green-50 p-4 rounded-lg flex items-center">
+            <div className="bg-green-100 p-2 rounded-full mr-3">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Checkmark%20icon%20in%20green%20circle&id=check-icon" 
+                alt="Safe status indicator with checkmark" 
+              />
+            </div>
+            <div>
+              <p className="font-medium">All areas safe</p>
+              <p className="text-sm text-muted-foreground">No alerts in your vicinity</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* SOS Button */}
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
+        <Button 
+          className="rounded-full w-16 h-16 bg-red-600 hover:bg-red-700 shadow-lg"
+          onClick={() => setScreen('incidentResponse')}
+        >
+          SOS
+        </Button>
+      </div>
+      
+      {/* AI Assistant Button */}
+      <div className="fixed bottom-6 right-6">
+        <Button 
+          className="rounded-full w-12 h-12"
+          onClick={() => setScreen('aiAssistant')}
+        >
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=AI%20assistant%20icon%20with%20speech%20bubble%20and%20microphone&id=ai-assistant" 
+            alt="AI assistant button with microphone icon" 
+          />
+        </Button>
+      </div>
+      
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-2 flex justify-around">
+        <Button variant="ghost" onClick={() => setScreen('home')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Home%20icon%20with%20house%20symbol&id=home-icon" 
+            alt="Home navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Home</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('safetyAlerts')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Alert%20icon%20with%20exclamation%20mark&id=alert-icon" 
+            alt="Safety alerts navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Alerts</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('geoFencing')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Map%20navigation%20icon%20with%20location%20pin&id=map-icon" 
+            alt="Geo-fencing navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Map</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('iotIntegration')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=IoT%20device%20icon%20with%20connected%20sensors&id=iot-icon" 
+            alt="IoT integration navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Devices</span>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const SafetyAlertsScreen = ({ setScreen }) => {
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Safety Alerts</h2>
+        <Button variant="outline">Filter</Button>
+      </div>
+      
+      <Card className="mb-4">
+        <CardContent className="p-0">
+          <div className="p-4 border-b border-border flex items-start">
+            <div className="bg-red-100 p-2 rounded-full mr-3 mt-1">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Warning%20icon%20with%20exclamation%20mark%20in%20triangle&id=warning-icon" 
+                alt="High alert warning indicator" 
+              />
+            </div>
+            <div>
+              <p className="font-medium">High crowd density detected</p>
+              <p className="text-sm text-muted-foreground">Near Champs-Élysées • 10 min ago</p>
+              <p className="text-sm mt-1">Avoid this area if possible</p>
+            </div>
+          </div>
+          
+          <div className="p-4 border-b border-border flex items-start">
+            <div className="bg-orange-100 p-2 rounded-full mr-3 mt-1">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Weather%20alert%20icon%20with%20cloud%20and%20rain&id=weather-icon" 
+                alt="Weather alert indicator" 
+              />
+            </div>
+            <div>
+              <p className="font-medium">Weather warning</p>
+              <p className="text-sm text-muted-foreground">City-wide • 45 min ago</p>
+              <p className="text-sm mt-1">Heavy rain expected this evening</p>
+            </div>
+          </div>
+          
+          <div className="p-4 flex items-start">
+            <div className="bg-blue-100 p-2 rounded-full mr-3 mt-1">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Information%20icon%20with%20letter%20i%20in%20circle&id=info-icon" 
+                alt="Information indicator" 
+              />
+            </div>
+            <div>
+              <p className="font-medium">Transportation update</p>
+              <p className="text-sm text-muted-foreground">Metro Line 1 • 1 hour ago</p>
+              <p className="text-sm mt-1">Delays expected due to maintenance</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <div className="mt-4">
+        <h3 className="font-medium mb-2">Live Heatmap</h3>
+        <img 
+          src="https://placeholder-image-service.onrender.com/image/400x200?prompt=Crowd%20density%20heatmap%20overlaid%20on%20city%20map%20with%20red%20and%20green%20zones&id=heatmap" 
+          alt="Crowd density heatmap showing safe and congested areas" 
+          className="rounded-lg w-full"
+        />
+      </div>
+      
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-2 flex justify-around">
+        <Button variant="ghost" onClick={() => setScreen('home')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Home%20icon%20with%20house%20symbol&id=home-icon-2" 
+            alt="Home navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Home</span>
+        </Button>
+        <Button variant="default" onClick={() => setScreen('safetyAlerts')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Alert%20icon%20with%20exclamation%20mark&id=alert-icon-2" 
+            alt="Safety alerts navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Alerts</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('geoFencing')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Map%20navigation%20icon%20with%20location%20pin&id=map-icon-2" 
+            alt="Geo-fencing navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Map</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('iotIntegration')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=IoT%20device%20icon%20with%20connected%20sensors&id=iot-icon-2" 
+            alt="IoT integration navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Devices</span>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const GeoFencingScreen = ({ setScreen }) => {
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Geo-Fencing Map</h2>
+        <Button variant="outline">Layers</Button>
+      </div>
+      
+      <div className="mb-4 relative">
+        <img 
+          src="https://placeholder-image-service.onrender.com/image/400x400?prompt=Interactive%20map%20with%20green%20safe%20zones%20and%20red%20restricted%20areas%20with%20user%20location%20pin&id=geo-fencing-map" 
+          alt="Interactive map showing safe zones in green and restricted areas in red" 
+          className="rounded-lg w-full"
+        />
+        <div className="absolute bottom-4 left-4 bg-background/80 backdrop-blur-sm rounded-lg p-3">
+          <div className="flex items-center mb-2">
+            <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+            <span className="text-sm">Safe Zone</span>
+          </div>
+          <div className="flex items-center">
+            <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+            <span className="text-sm">Restricted Area</span>
+          </div>
+        </div>
+      </div>
+      
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle>Zone Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-green-50 p-4 rounded-lg flex items-center">
+            <div className="bg-green-100 p-2 rounded-full mr-3">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Checkmark%20icon%20in%20green%20circle&id=check-icon-2" 
+                alt="Safe zone status indicator" 
+              />
+            </div>
+            <div>
+              <p className="font-medium">You are in a safe zone</p>
+              <p className="text-sm text-muted-foreground">Current location: Eiffel Tower Gardens</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <div className="mt-4 bg-orange-50 p-4 rounded-lg">
+        <h3 className="font-medium mb-2">⚠️ Nearby Restricted Area</h3>
+        <p className="text-sm mb-3">A restricted zone is 200m away. Exercise caution if approaching.</p>
+        <div className="flex space-x-2">
+          <Button variant="outline" size="sm">View Details</Button>
+          <Button size="sm">Navigate Safe Route</Button>
+        </div>
+      </div>
+      
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-2 flex justify-around">
+        <Button variant="ghost" onClick={() => setScreen('home')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Home%20icon%20with%20house%20symbol&id=home-icon-3" 
+            alt="Home navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Home</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('safetyAlerts')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Alert%20icon%20with%20exclamation%20mark&id=alert-icon-3" 
+            alt="Safety alerts navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Alerts</span>
+        </Button>
+        <Button variant="default" onClick={() => setScreen('geoFencing')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Map%20navigation%20icon%20with%20location%20pin&id=map-icon-3" 
+            alt="Geo-fencing navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Map</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('iotIntegration')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=IoT%20device%20icon%20with%20connected%20sensors&id=iot-icon-3" 
+            alt="IoT integration navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Devices</span>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const IncidentResponseScreen = ({ setScreen, sosSent, setSosSent }) => {
+  const [recording, setRecording] = useState(false);
+  
+  const handleSos = () => {
+    setSosSent(true);
+    // Simulate API call to emergency services
+    setTimeout(() => {
+      setScreen('home');
+      setSosSent(false);
+    }, 3000);
+  };
+  
+  if (sosSent) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="bg-green-100 p-4 rounded-full mb-6">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/48x48?prompt=Checkmark%20icon%20in%20green%20circle&id=success-icon" 
+            alt="SOS successfully sent confirmation" 
+          />
+        </div>
+        <h2 className="text-2xl font-semibold mb-2">SOS Sent Successfully</h2>
+        <p className="text-muted-foreground text-center mb-6">
+          Help is on the way. Your location and details have been shared with authorities.
+        </p>
+        <Button onClick={() => setScreen('home')}>Return to Home</Button>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="flex flex-col items-center">
+      <h2 className="text-2xl font-semibold mb-6">Emergency Assistance</h2>
+      
+      <div className="bg-red-50 p-6 rounded-lg text-center mb-6">
+        <div className="bg-red-100 p-3 rounded-full inline-block mb-4">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/32x32?prompt=Emergency%20SOS%20icon%20with%20exclamation%20mark&id=emergency-icon" 
+            alt="Emergency SOS alert indicator" 
+          />
+        </div>
+        <h3 className="font-semibold mb-2">Are you in immediate danger?</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Pressing SOS will alert authorities and your emergency contacts with your location.
+        </p>
+        <Button className="bg-red-600 hover:bg-red-700 mb-4" onClick={handleSos}>
+          Send SOS Alert
+        </Button>
+      </div>
+      
+      <Card className="w-full mb-4">
+        <CardHeader className="pb-3">
+          <CardTitle>Add Emergency Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="emergencyNote">Add Note (Optional)</Label>
+              <Input id="emergencyNote" placeholder="Describe your emergency situation" />
+            </div>
+            
+            <div>
+              <Label>Attach Media (Optional)</Label>
+              <div className="flex space-x-2 mt-2">
+                <Button 
+                  variant={recording ? "destructive" : "outline"} 
+                  className="flex-1"
+                  onClick={() => setRecording(!recording)}
+                >
+                  {recording ? 'Stop Recording' : 'Record Voice Note'}
+                </Button>
+                <Button variant="outline" className="flex-1">
+                  Take Photo
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <div className="text-center text-sm text-muted-foreground">
+        <p>Your location, digital ID, and itinerary will be shared with emergency services.</p>
+      </div>
+      
+      <div className="mt-6">
+        <Button variant="ghost" onClick={() => setScreen('home')}>Cancel</Button>
+      </div>
+    </div>
+  );
+};
+
+const DigitalIdScreen = ({ setScreen }) => {
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Your Digital ID</h2>
+        <Button variant="outline">Share</Button>
+      </div>
+      
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <div className="text-center">
+            <div className="mb-4">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/80x80?prompt=User%20profile%20photo%20with%20neutral%20background&id=user-photo" 
+                alt="User profile photo for digital ID" 
+                className="rounded-full mx-auto"
+              />
+            </div>
+            <h3 className="text-xl font-semibold">Sarah Johnson</h3>
+            <p className="text-muted-foreground">American • Age 32</p>
+            
+            <div className="mt-4 p-4 bg-muted rounded-lg">
+              <p className="text-sm font-mono break-all">Blockchain ID: 0x8a3f7e2c1b...94a5c42d</p>
+            </div>
+            
+            <div className="mt-6">
+              <img 
+                src="https://placeholder-image-service.onrender.com/image/160x160?prompt=QR%20code%20with%20Safe%20Voyager%20logo%20in%20center&id=qr-code" 
+                alt="QR code for sharing digital ID securely" 
+                className="mx-auto"
+              />
+              <p className="text-sm text-muted-foreground mt-2">Scan to verify identity</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Uploaded Documents</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-3 border border-border rounded-lg">
+              <div className="flex items-center">
+                <div className="bg-blue-100 p-2 rounded-full mr-3">
+                  <img 
+                    src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Document%20icon%20with%20paper%20sheet&id=document-icon" 
+                    alt="Document icon" 
+                  />
+                </div>
+                <div>
+                  <p className="font-medium">Passport</p>
+                  <p className="text-sm text-muted-foreground">Verified • Expires 2028</p>
+                </div>
+              </div>
+              <Button variant="ghost" size="sm">View</Button>
+            </div>
+            
+            <div className="flex justify-between items-center p-3 border border-border rounded-lg">
+              <div className="flex items-center">
+                <div className="bg-green-100 p-2 rounded-full mr-3">
+                  <img 
+                    src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Visa%20document%20icon%20with%20stamp&id=visa-icon" 
+                    alt="Visa document icon" 
+                  />
+                </div>
+                <div>
+                  <p className="font-medium">Visa</p>
+                  <p className="text-sm text-muted-foreground">Verified • Valid 90 days</p>
+                </div>
+              </div>
+              <Button variant="ghost" size="sm">View</Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <div className="mt-6">
+        <Button variant="outline" className="w-full" onClick={() => setScreen('home')}>
+          Back to Home
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const AIAssistantScreen = ({ setScreen, language, setLanguage }) => {
+  const [messages, setMessages] = useState([
+    { id: 1, text: "Hello! I'm your Tourist Guardian AI. How can I help you today?", sender: 'ai' }
+  ]);
+  const [inputText, setInputText] = useState('');
+  const [isListening, setIsListening] = useState(false);
+  
+  const handleSend = () => {
+    if (inputText.trim() === '') return;
+    
+    // Add user message
+    setMessages(prev => [...prev, { id: Date.now(), text: inputText, sender: 'user' }]);
+    
+    // Simulate AI response
+    setTimeout(() => {
+      let response = "";
+      if (inputText.toLowerCase().includes('hospital')) {
+        response = "The nearest hospital is Hôpital Européen Georges-Pompidou, 500m away. Would you like directions?";
+      } else if (inputText.toLowerCase().includes('police')) {
+        response = "The nearest police station is Commissariat du 7e Arrondissement, 800m away. Would you like me to alert them?";
+      } else if (inputText.toLowerCase().includes('restaurant')) {
+        response = "I recommend Le Jules Verne for fine dining or Les Deux Magots for traditional French cuisine. Both are within 1km.";
+      } else {
+        response = "I'm here to help with safety and travel information. You can ask me about nearby services, directions, or emergency assistance.";
+      }
+      
+      setMessages(prev => [...prev, { id: Date.now(), text: response, sender: 'ai' }]);
+    }, 1000);
+    
+    setInputText('');
+  };
+  
+  const toggleListening = () => {
+    setIsListening(!isListening);
+    // In a real app, this would trigger speech recognition
+  };
+  
+  return (
+    <div className="h-full flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold">Tourist Guardian AI</h2>
+        <select 
+          value={language} 
+          onChange={(e) => setLanguage(e.target.value)}
+          className="bg-muted rounded-md px-3 py-1 text-sm"
+        >
+          <option value="English">English</option>
+          <option value="French">French</option>
+          <option value="Spanish">Spanish</option>
+          <option value="German">German</option>
+          <option value="Hindi">Hindi</option>
+        </select>
+      </div>
+      
+      <div className="flex-1 overflow-y-auto mb-4 space-y-4">
+        {messages.map(message => (
+          <div
+            key={message.id}
+            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-[80%] rounded-lg p-3 ${
+                message.sender === 'user'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted'
+              }`}
+            >
+              {message.text}
+              {message.sender === 'ai' && message.text.includes('directions') && (
+                <div className="mt-2 flex space-x-2">
+                  <Button size="sm" variant={message.sender === 'ai' ? 'default' : 'outline'}>
+                    Yes, navigate me
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    No thanks
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="flex items-center border border-border rounded-lg overflow-hidden">
+        <Input
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          placeholder="Type your question here..."
+          className="border-0 focus-visible:ring-0"
+          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+        />
+        <Button
+          variant={isListening ? "destructive" : "ghost"}
+          size="icon"
+          onClick={toggleListening}
+        >
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Microphone%20icon%20for%20voice%20input&id=microphone-icon" 
+            alt="Voice input microphone button" 
+          />
+        </Button>
+        <Button size="icon" onClick={handleSend}>
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Send%20message%20icon%20with%20paper%20airplane&id=send-icon" 
+            alt="Send message button" 
+          />
+        </Button>
+      </div>
+      
+      <div className="mt-4">
+        <p className="text-xs text-muted-foreground text-center">
+          Ask me about safety, directions, emergency services, or local information.
+        </p>
+      </div>
+      
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-2 flex justify-around">
+        <Button variant="ghost" onClick={() => setScreen('home')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Home%20icon%20with%20house%20symbol&id=home-icon-4" 
+            alt="Home navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Home</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('safetyAlerts')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Alert%20icon%20with%20exclamation%20mark&id=alert-icon-4" 
+            alt="Safety alerts navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Alerts</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('geoFencing')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Map%20navigation%20icon%20with%20location%20pin&id=map-icon-4" 
+            alt="Geo-fencing navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Map</span>
+        </Button>
+        <Button variant="default" onClick={() => setScreen('aiAssistant')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=AI%20assistant%20icon%20with%20chat%20bubble&id=ai-icon" 
+            alt="AI assistant navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Assistant</span>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const IotIntegrationScreen = ({ setScreen }) => {
+  return (
+    <div>
+      <h2 className="text-2xl font-semibold mb-6">Connected Sensors</h2>
+      
+      <Card className="mb-6">
+        <CardHeader className="pb-3">
+          <CardTitle>Device Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center">
+                <div className="bg-green-100 p-2 rounded-full mr-3">
+                  <img 
+                    src="https://placeholder-image-service.onrender.com/image/20x20?prompt=GPS%20location%20icon%20with%20satellite&id=gps-icon" 
+                    alt="GPS sensor status indicator" 
+                  />
+                </div>
+                <div>
+                  <p className="font-medium">GPS</p>
+                  <p className="text-sm text-muted-foreground">Active • High accuracy</p>
+                </div>
+              </div>
+              <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Connected</div>
+            </div>
+            
+            <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center">
+                <div className="bg-green-100 p-2 rounded-full mr-3">
+                  <img 
+                    src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Accelerometer%20icon%20with%20movement%20waves&id=accelerometer-icon" 
+                    alt="Accelerometer sensor status indicator" 
+                  />
+                </div>
+                <div>
+                  <p className="font-medium">Accelerometer</p>
+                  <p className="text-sm text-muted-foreground">Active • Monitoring motion</p>
+                </div>
+              </div>
+              <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Connected</div>
+            </div>
+            
+            <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center">
+                <div className="bg-green-100 p-2 rounded-full mr-3">
+                  <img 
+                    src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Gyroscope%20icon%20with%20rotation%20arrows&id=gyroscope-icon" 
+                    alt="Gyroscope sensor status indicator" 
+                  />
+                </div>
+                <div>
+                  <p className="font-medium">Gyroscope</p>
+                  <p className="text-sm text-muted-foreground">Active • Monitoring orientation</p>
+                </div>
+              </div>
+              <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Connected</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle>Blockchain Integration</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="flex items-center mb-3">
+              <div className="bg-blue-100 p-2 rounded-full mr-3">
+                <img 
+                  src="https://placeholder-image-service.onrender.com/image/20x20?prompt=Blockchain%20icon%20with%20connected%20blocks&id=blockchain-icon" 
+                  alt="Blockchain integration indicator" 
+                />
+              </div>
+              <div>
+                <p className="font-medium">Data Securely Linked</p>
+                <p className="text-sm text-muted-foreground">All sensor data is encrypted and stored on blockchain</p>
+              </div>
+            </div>
+            
+            <div className="bg-white p-3 rounded text-sm font-mono break-all">
+              <p>Blockchain Hash: 0xb49f4e...c72a1d</p>
+              <p className="text-xs text-muted-foreground mt-1">Last updated: 2 minutes ago</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <div className="mt-6">
+        <Button variant="outline" className="w-full" onClick={() => setScreen('arSafeRoute')}>
+          Try AR Safe Route
+        </Button>
+      </div>
+      
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-2 flex justify-around">
+        <Button variant="ghost" onClick={() => setScreen('home')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Home%20icon%20with%20house%20symbol&id=home-icon-5" 
+            alt="Home navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Home</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('safetyAlerts')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Alert%20icon%20with%20exclamation%20mark&id=alert-icon-5" 
+            alt="Safety alerts navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Alerts</span>
+        </Button>
+        <Button variant="ghost" onClick={() => setScreen('geoFencing')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=Map%20navigation%20icon%20with%20location%20pin&id=map-icon-5" 
+            alt="Geo-fencing navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Map</span>
+        </Button>
+        <Button variant="default" onClick={() => setScreen('iotIntegration')} className="flex flex-col items-center">
+          <img 
+            src="https://placeholder-image-service.onrender.com/image/24x24?prompt=IoT%20device%20icon%20with%20connected%20sensors&id=iot-icon-5" 
+            alt="IoT integration navigation icon" 
+            className="mb-1"
+          />
+          <span className="text-xs">Devices</span>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const ArSafeRouteScreen = ({ setScreen, arActive, setArActive }) => {
+  return (
+    <div className="h-full flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold">AR Safe Route</h2>
+        <Button 
+          variant={arActive ?
+
+🎨 **Generating images based on descriptions...**
+ ⬤

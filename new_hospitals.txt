@@ -1,0 +1,14 @@
+[
+  {
+    "name": "City Hospital",
+    "privateBeds": 0,
+    "sharedBeds": 4,
+    "icuBeds": 1
+  },
+  {
+    "name": "Metro Care",
+    "privateBeds": 4,
+    "sharedBeds": 6,
+    "icuBeds": 2
+  }
+]

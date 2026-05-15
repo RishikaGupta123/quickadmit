@@ -1,0 +1,652 @@
+body{
+    margin:0;
+    font-family:Arial;
+    background:#eef4ff;
+    transition:0.3s;
+}
+
+/* DARK */
+
+.dark-mode{
+    background:#111827;
+    color:white;
+}
+
+.dark-mode .hospital-card,
+.dark-mode .chatbot,
+.dark-mode .dash-card,
+.dark-mode .top-bar{
+    background:#1f2937;
+    color:white;
+}
+
+/* TOP */
+
+.top-bar{
+    background:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    color:#2563eb;
+}
+
+.top-buttons button{
+    margin-left:10px;
+}
+
+/* HERO */
+
+.hero{
+    text-align:center;
+    padding:40px 20px;
+}
+
+.hero h1{
+    color:#2563eb;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.dash-card{
+    background:white;
+    padding:25px;
+    width:200px;
+    border-radius:16px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.dash-card h2{
+    color:#2563eb;
+    font-size:32px;
+}
+
+/* SEARCH */
+
+.search-container{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.search-container input,
+.search-container select{
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    width:200px;
+}
+
+/* BUTTON */
+
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 16px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.logout-btn{
+    background:#ef4444;
+}
+
+/* CARD */
+
+.hospital-card{
+    background:white;
+    width:80%;
+    margin:20px auto;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 2px 15px rgba(0,0,0,0.1);
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+}
+
+.hospital-type{
+    background:#dbeafe;
+    padding:6px 10px;
+    border-radius:10px;
+    color:#2563eb;
+}
+
+/* IMAGE */
+
+.hospital-image{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:14px;
+    margin-bottom:15px;
+}
+
+/* BED */
+
+.bed-box{
+    margin-top:20px;
+    padding:15px;
+    background:#f8fbff;
+    border-radius:12px;
+}
+
+/* STATUS */
+
+.status{
+    padding:6px 12px;
+    display:inline-block;
+    border-radius:10px;
+    margin:10px 0;
+    color:white;
+}
+
+.green{
+    background:green;
+}
+
+.yellow{
+    background:orange;
+}
+
+.red{
+    background:red;
+}
+
+/* DOCTOR */
+
+.doctor-box{
+    margin-top:20px;
+}
+
+.doctor-box button{
+    margin:5px;
+}
+
+/* CHATBOT */
+
+.chatbot{
+    width:80%;
+    margin:40px auto;
+    background:white;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 2px 15px rgba(0,0,0,0.1);
+}
+
+.chatbot input{
+    width:80%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+#chatReply{
+    margin-top:15px;
+    font-weight:bold;
+    color:#2563eb;
+}
+
+/* LOGIN PAGE */
+
+.login-page{
+    background:linear-gradient(
+        135deg,
+        #dbeafe,
+        #eef4ff
+    );
+    height:100vh;
+    overflow:hidden;
+}
+
+/* CONTAINER */
+
+.login-container{
+    display:flex;
+    height:100vh;
+}
+
+/* LEFT */
+
+.login-left{
+    flex:1;
+    background:#2563eb;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+
+.login-left h1{
+    font-size:60px;
+    margin-bottom:10px;
+}
+
+.login-left p{
+    font-size:20px;
+    margin-bottom:30px;
+    text-align:center;
+}
+
+.login-image{
+    width:80%;
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+
+/* RIGHT */
+
+.login-card{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:white;
+    padding:40px;
+}
+
+.login-card h2{
+    font-size:40px;
+    color:#2563eb;
+    margin-bottom:10px;
+}
+
+.sub-text{
+    margin-bottom:30px;
+    color:#666;
+}
+
+.login-card input{
+    width:80%;
+    padding:15px;
+    margin:10px 0;
+    border-radius:12px;
+    border:1px solid #ccc;
+    font-size:16px;
+}
+
+.login-card button{
+    width:80%;
+    margin-top:20px;
+    padding:15px;
+    font-size:16px;
+    border-radius:12px;
+    background:#2563eb;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .login-container{
+        flex-direction:column;
+    }
+
+    .login-left{
+        display:none;
+    }
+
+    .login-card{
+        width:100%;
+        height:100vh;
+    }
+}
+
+
+/* BOOKINGS POPUP */
+
+.booking-popup{
+
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.booking-container{
+
+    width:80%;
+    max-height:85vh;
+    overflow-y:auto;
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.3);
+}
+
+.booking-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.booking-header h1{
+
+    color:#2563eb;
+}
+
+.booking-header button{
+
+    background:red;
+    color:white;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.booking-list{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.booking-card{
+
+    flex:1 1 300px;
+    background:#f8fbff;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.booking-card h2{
+
+    color:#2563eb;
+    margin-bottom:15px;
+}
+
+.booking-card p{
+
+    margin:8px 0;
+}
+
+.booking-actions{
+
+    margin-top:20px;
+}
+
+.cancel-btn{
+
+    width:100%;
+    background:#ef4444;
+    color:white;
+    border:none;}
+    ```css
+/* CHAT TOGGLE */
+
+#chatToggle{
+
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    z-index:999;
+
+    background:#2563eb;
+}
+
+/* CHATBOT */
+
+#chatbot{
+
+    position:fixed;
+
+    right:20px;
+    bottom:80px;
+
+    width:320px;
+
+    background:white;
+
+    border-radius:20px;
+
+    box-shadow:
+    0 4px 15px rgba(0,0,0,0.2);
+
+    overflow:hidden;
+
+    display:none;
+
+    z-index:999;
+}
+
+#chatHeader{
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:15px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+#closeChat{
+
+    background:red;
+    padding:5px 10px;
+}
+
+#chatMessages{
+
+    height:250px;
+
+    overflow:auto;
+
+    padding:15px;
+}
+
+/* CLOSE BUTTONS */
+
+.close-btn{
+
+    background:red;
+}
+
+/* MODAL HEADER */
+
+.modal-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+```
+
+
+/* DARK MODE */
+
+.dark-mode{
+background:#111827;
+color:white;
+}
+
+.dark-mode .card{
+background:#1f2937;
+color:white;
+}
+
+.dark-mode .modal-content{
+background:#1f2937;
+color:white;
+}
+
+.dark-mode .bed-box{
+background:#374151;
+color:white;
+}
+
+.dark-mode input,
+.dark-mode select{
+background:#111827;
+color:white;
+border:1px solid #555;
+}
+
+.dark-mode #chatbot{
+background:#1f2937;
+color:white;
+}
+
+.dark-mode .booking-card{
+background:#374151;
+color:white;
+}
+/* ================= DASHBOARD ================= */
+
+.dashboard{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.dashboard-card{
+background:white;
+padding:20px;
+border-radius:18px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+.dark-mode .dashboard-card{
+background:#1e1e1e;
+color:white;
+}
+
+/* ================= PRIORITY TAG ================= */
+
+.priority{
+padding:6px 12px;
+border-radius:8px;
+font-size:13px;
+font-weight:bold;
+display:inline-block;
+margin-bottom:10px;
+}
+
+.high{
+background:red;
+color:white;
+}
+
+.medium{
+background:orange;
+color:white;
+}
+
+.low{
+background:green;
+color:white;
+}
+
+/* ================= NOTIFICATION ================= */
+
+#notification{
+position:fixed;
+top:20px;
+right:20px;
+background:#2563eb;
+color:white;
+padding:15px 20px;
+border-radius:12px;
+display:none;
+z-index:5000;
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:768px){
+
+.top-bar{
+flex-direction:column;
+align-items:stretch;
+}
+
+.top-bar input,
+.top-bar select,
+.top-bar button{
+width:100% !important;
+}
+
+#hospitalList{
+grid-template-columns:1fr;
+}
+
+#chatbot{
+width:90%;
+right:5%;
+}
+
+.modal-content{
+width:95%;
+}
+}
+.dark-mode{
+background:#0f172a;
+color:white;
+}
+
+.dark-mode .card{
+background:#1e293b;
+color:white;
+}
+
+.dark-mode .modal-content{
+background:#1e293b;
+color:white;
+}
+
+.dark-mode input,
+.dark-mode select{
+background:#334155;
+color:white;
+border:none;
+}
+
+.dark-mode .booking-card{
+background:#334155;
+color:white;
+}
