@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -5,192 +6,34 @@
 
 <title>QuickAdmit Login</title>
 
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:
-linear-gradient(135deg,#2563eb,#60a5fa);
-overflow:hidden;
-}
-
-.container{
-width:900px;
-height:550px;
-background:white;
-border-radius:30px;
-overflow:hidden;
-display:flex;
-box-shadow:
-0 10px 40px rgba(0,0,0,0.25);
-}
-
-.left{
-flex:1;
-background:
-linear-gradient(
-rgba(37,99,235,0.85),
-rgba(37,99,235,0.85)
-),
-url("https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=1200&auto=format&fit=crop");
-
-background-size:cover;
-background-position:center;
-
-color:white;
-
-display:flex;
-flex-direction:column;
-justify-content:center;
-padding:50px;
-}
-
-.left h1{
-font-size:55px;
-margin-bottom:15px;
-}
-
-.left p{
-font-size:18px;
-line-height:1.7;
-opacity:0.95;
-}
-
-.logo{
-font-size:70px;
-margin-bottom:20px;
-}
-
-.right{
-flex:1;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:40px;
-}
-
-.form-box{
-width:100%;
-max-width:320px;
-}
-
-.form-box h2{
-font-size:35px;
-margin-bottom:10px;
-color:#2563eb;
-}
-
-.form-box p{
-color:gray;
-margin-bottom:30px;
-}
-
-input{
-width:100%;
-padding:14px;
-margin-bottom:18px;
-border-radius:12px;
-border:1px solid #ccc;
-font-size:15px;
-}
-
-button{
-width:100%;
-padding:14px;
-border:none;
-border-radius:12px;
-background:#2563eb;
-color:white;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-background:#1d4ed8;
-}
-
-.bottom{
-margin-top:20px;
-text-align:center;
-}
-
-.bottom a{
-text-decoration:none;
-color:#2563eb;
-font-weight:bold;
-}
-
-@media(max-width:850px){
-
-.container{
-flex-direction:column;
-height:auto;
-width:95%;
-}
-
-.left{
-padding:30px;
-}
-
-.left h1{
-font-size:40px;
-}
-
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
-<body>
+<body class="login-page">
 
-<div class="container">
+<div class="login-container">
 
-<div class="left">
+<div class="login-left">
 
-<div class="logo">
-🏥
-</div>
-
-<h1>
-QuickAdmit
-</h1>
+<h1>QuickAdmit</h1>
 
 <p>
-
-Smart Hospital Management System for instant bed booking,
-appointments, ambulance services and emergency healthcare support.
-
-<br><br>
-
-Fast • Secure • Reliable
-
+Smart Hospital Bed Booking System
 </p>
 
+<img
+src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3"
+class="login-image">
+
 </div>
 
-<div class="right">
+<div class="login-card">
 
-<div class="form-box">
+<h2>Login</h2>
 
-<h2>
-Welcome Back
-</h2>
-
-<p>
-Login to continue your healthcare journey
+<p class="sub-text">
+Login to continue
 </p>
 
 <input
@@ -203,80 +46,27 @@ type="password"
 id="password"
 placeholder="Enter Password">
 
-<button onclick="login()">
+<button onclick="loginUser()">
 Login
 </button>
 
-<div class="bottom">
+<p>
 
-Don't have account?
+New User?
 
 <a href="signup.html">
-Signup
+Create Account
 </a>
 
-</div>
+</p>
 
 </div>
 
 </div>
 
-</div>
+<script src="script.js"></script>
 
-<script>
-
-async function login(){
-
-const email=
-document.getElementById("email").value;
-
-const password=
-document.getElementById("password").value;
-
-if(!email || !password){
-
-alert("Fill all fields");
-return;
-}
-
-const response=
-await fetch("/api/login",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-email,
-password
-})
-
-});
-
-const data=
-await response.json();
-
-if(data.success){
-
-localStorage.setItem(
-"user",
-JSON.stringify(data.user)
-);
-
-window.location.href="/";
-
-}
-
-else{
-
-alert(data.message);
-
-}
-}
-
-</script>
 
 </body>
+
 </html>

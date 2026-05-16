@@ -1,9 +1,36 @@
+const user = localStorage.getItem("user");
+
+const currentPage = window.location.pathname;
+
+/* PROTECT INDEX PAGE */
+
+if (
+    currentPage.includes("index.html") &&
+    !user
+) {
+    window.location.href = "/signup.html";
+}
+
+/* IF USER ALREADY LOGGED IN */
+
+if (
+    user &&
+    (
+        currentPage.includes("login.html") ||
+        currentPage.includes("signup.html")
+    )
+) {
+    window.location.href = "/index.html";
+}
+
 let hospitals = [];
 
 let selectedHospital = "";
 let selectedType = "";
 let appointmentHospital = "";
 let ambulanceBooked = false;
+
+
 
 /* =========================
    LOAD HOSPITALS
@@ -921,11 +948,16 @@ document.body.classList.contains("dark")
    LOGOUT
 ========================= */
 
-function logout() {
 
-    window.location.href =
-        "/login.html";
+function logout(){
+
+localStorage.removeItem("user");
+
+window.location.href="/login.html";
 }
+
+
+
 
 /* =========================
    WINDOW LOAD
@@ -933,7 +965,15 @@ function logout() {
 
 window.onload=function(){
 
+/* LOAD HOSPITALS ONLY ON INDEX PAGE */
+
+if(
+document.getElementById("hospitalList")
+){
+
 loadHospitals();
+
+}
 
 /* LOAD DARK MODE */
 
@@ -947,3 +987,147 @@ document.body.classList.add("dark");
 }
 
 };
+
+
+
+/* LOGIN */
+
+async function loginUser(){
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+if(!email || !password){
+
+alert("Fill all fields");
+return;
+
+}
+
+try{
+
+const response =
+await fetch("/api/login",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+email,
+password
+})
+
+});
+
+const data =
+await response.json();
+
+if(!data.success){
+
+alert(data.message);
+return;
+
+}
+
+localStorage.setItem(
+"user",
+JSON.stringify(data.user)
+);
+
+
+window.location.href="/index.html";
+
+
+
+}catch(err){
+
+alert("Login Failed");
+
+}
+
+}
+
+/* SIGNUP */
+
+async function signupUser(){
+
+const name =
+document.getElementById("name").value;
+
+const email =
+document.getElementById("email").value;
+
+const phone =
+document.getElementById("phone").value;
+
+const password =
+document.getElementById("password").value;
+
+if(!name || !email || !phone || !password){
+
+alert("Fill all fields");
+return;
+
+}
+
+if(phone.length !== 10){
+
+alert("Phone number must be 10 digits");
+return;
+
+}
+
+try{
+
+const response =
+await fetch("/api/signup",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+name,
+email,
+phone,
+password
+})
+
+});
+
+const data =
+await response.json();
+
+if(!data.success){
+
+alert(data.message);
+return;
+
+}
+
+localStorage.setItem(
+"user",
+JSON.stringify(data.user)
+);
+
+
+
+window.location.href="/login.html";
+
+
+
+}catch(err){
+
+alert("Signup Failed");
+
+}
+
+}

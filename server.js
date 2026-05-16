@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -8,12 +9,21 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+
+
+/* OPEN LOGIN PAGE FIRST */
 app.get("/", (req, res) => {
 
-res.sendFile(__dirname + "/public/index.html");
+    res.sendFile(
+        __dirname + "/public/login.html"
+    );
 
 });
+app.use(express.static("public"));
+
+
+
+
 app.use(helmet());
 
 /* =========================
@@ -178,163 +188,10 @@ console.log("✅ Hospitals Inserted");
 insertHospitals();
 
 /* =========================
-   SIGNUP
-========================= */
-
-app.post("/api/signup",
-
-async (req,res)=>{
-
-try{
-
-const {
-name,
-email,
-phone,
-password
-} = req.body;
-
-if(
-!name ||
-!email ||
-!phone ||
-!password
-){
-
-return res.json({
-
-success:false,
-message:"Fill all fields"
-
-});
-}
-
-const existing =
-await User.findOne({
-email
-});
-
-if(existing){
-
-return res.json({
-
-success:false,
-message:"Email already exists"
-
-});
-}
-
-const user =
-new User({
-
-name,
-email,
-phone,
-password
-
-});
-
-await user.save();
-
-res.json({
-
-success:true,
-message:"Signup Successful"
-
-});
-
-}catch(err){
-
-console.log(err);
-
-res.json({
-
-success:false,
-message:"Signup Failed"
-
-});
-}
-});
-
-/* =========================
-   LOGIN
-========================= */
-
-app.post("/api/login",
-
-async (req,res)=>{
-
-try{
-
-const {
-email,
-password
-} = req.body;
-
-if(
-!email ||
-!password
-){
-
-return res.json({
-
-success:false,
-message:"Fill all fields"
-
-});
-}
-
-const user =
-await User.findOne({
-
-email,
-password
-
-});
-
-if(!user){
-
-return res.json({
-
-success:false,
-message:"Invalid Credentials"
-
-});
-}
-
-res.json({
-
-success:true,
-
-user:{
-
-name:user.name,
-email:user.email
-
-}
-
-});
-
-}catch(err){
-
-console.log(err);
-
-res.json({
-
-success:false,
-message:"Login Failed"
-
-});
-}
-});
-
-/* =========================
    GET HOSPITALS
 ========================= */
 
-app.get("/api/hospitals",
-
-async (req,res)=>{
+app.get("/api/hospitals", async(req,res)=>{
 
 try{
 
@@ -350,6 +207,189 @@ console.log(err);
 res.json([]);
 
 }
+
+});
+
+
+/* =========================
+   SIGNUP
+========================= */
+
+app.post("/api/signup", async(req,res)=>{
+
+try{
+
+const {
+name,
+email,
+phone,
+password
+} = req.body;
+
+console.log("SIGNUP EMAIL:", email);
+
+if(
+!name ||
+!email ||
+!phone ||
+!password
+){
+
+return res.json({
+success:false,
+message:"Fill all fields"
+});
+
+}
+
+
+const existingUser =
+await User.findOne({
+
+email: email.trim()
+
+});
+
+if(existingUser !== null){
+
+return res.json({
+
+success:false,
+message:"Email already exists"
+
+});
+
+}
+const newUser = new User({
+
+name,
+email,
+phone,
+password
+
+});
+
+await newUser.save();
+
+return res.json({
+
+success:true,
+
+user:{
+name:newUser.name,
+email:newUser.email,
+phone:newUser.phone
+}
+
+});
+
+}catch(err){
+
+console.log(err);
+
+return res.json({
+success:false,
+message:"Signup Failed"
+});
+
+}
+
+});
+
+
+/* =========================
+   LOGIN
+========================= */
+
+app.post("/api/login", async(req,res)=>{
+
+try{
+
+const { email,password } = req.body;
+
+if(!email || !password){
+
+return res.json({
+success:false,
+message:"Fill all fields"
+});
+
+}
+
+const user =
+await User.findOne({
+
+email: email.trim()
+
+});
+
+if(!user){
+
+return res.json({
+success:false,
+message:"User not found"
+});
+
+}
+
+if(user.password !== password.trim()){
+
+return res.json({
+success:false,
+message:"Invalid Credentials"
+});
+
+}
+
+return res.json({
+
+success:true,
+
+user:{
+name:user.name,
+email:user.email,
+phone:user.phone
+}
+
+});
+
+}catch(err){
+
+console.log(err);
+
+return res.json({
+success:false,
+message:"Login Failed"
+});
+
+}
+
+});
+
+
+/* =========================
+   GET HOSPITALS
+========================= */
+
+app.get("/api/hospitals",
+
+async(req,res)=>{
+
+try{
+
+const hospitals =
+await Hospital.find();
+
+res.json(hospitals);
+
+}catch(err){
+
+console.log(err);
+
+res.json([]);
+
+}
+
 });
 
 /* =========================
@@ -845,6 +885,7 @@ reply:
 /* =========================
    SERVER
 ========================= */
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
@@ -854,3 +895,4 @@ console.log(
 );
 
 });
+
