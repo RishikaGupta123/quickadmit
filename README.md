@@ -51,17 +51,15 @@ QuickAdmit is a Full-Stack Smart Hospital Management & Bed Booking System develo
 
 ### Login Page
 
-(Add Screenshot Here)
+![Login Page](screenshots/login.png)
 
 ### Dashboard
 
-(Add Screenshot Here)
+![Dashboard](screenshots/dashboard.png)
 
 ### Bed Booking
 
-(Add Screenshot Here)
-
----
+![Bed Booking](screenshots/booking.png)
 
 ## ⚙ Installation
 
